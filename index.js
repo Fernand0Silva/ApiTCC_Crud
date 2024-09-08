@@ -1,25 +1,95 @@
 const express = require('express');
+const cors = require('cors');
+const { sql, conectarBanco } = require('./Database/BdConfig'); // Importa a conexão
 const app = express();
 const port = 3000;
+
+
 app.use(express.json());
+app.use(cors());
+
+// Inicia a conexão ao banco de dados
+//conectarBanco();
 
 app.get('/',(req,res) => {
     return res.json('Servidor Iniciado :)');
 
 });
 
+
+conectarBanco();
+app.get('/Produto',async(req,res)=>{
+    try{
+    const pool = await sql.connect();
+    const data = pool.request().query('select * from tbl_Produto');
+    data.then(resl=>{
+        return res.json(resl);
+    });
+} 
+catch(err)
+{
+    console.log('Erro ao consultar produtos:',err);
+    res.status(500).send('Erro ao consultar produtos');
+}
+});
+
+app.get('/Artesao',async(req,res)=>{
+    try{
+    const pool = await sql.connect();
+    const data = pool.request().query('Select * from tbl_Artesao');
+    data.then(resl=>{
+        return res.json(resl);
+    });
+} 
+catch(err)
+{
+    console.log('Erro ao consultar artesãos',err);
+    res.status(500).send('Erro ao consultar artesãos');
+}
+});
+
+app.listen(port, () => {
+    console.log(`Servidor rodando na porta http://localhost:${port}`);
+});
+/*app.get('/',(req,res)=>{
+    return res.json("backend on!!!");
+});*/
+
+
 let artesao = [];
 
 //Criar artesao
 
-app.post('/artesao',(req,res) => {
+app.post('/artesao',async (req,res) => {
     const {Nome,Cidade,Rg,Cpf,Email,Telefone,Endereco,Idade} = req.body;
     if(!Nome || !Cidade|| !Rg|| !Cpf|| !Email|| !Telefone|| !Endereco|| !Idade){
         return res.status(400).send('Nome,Cidade,Rg,Cpf,Email,Telefone,Endereço ou Idade ausentes')
     }
-    const novoArtesao = {id: artesao.length + 1, Nome, Cidade, Rg, Cpf, Email, Telefone, Endereco, Idade};
+
+    try{
+        //Usa a conexão existente com o banco
+        const pool = await sql.connect();
+        await pool.request()
+        //.input('Id', sql.NVarChar, )
+        .input('Nome', sql.NVarChar, Nome)
+        .input('Cidade', sql.NVarChar, Cidade)
+        .input('Rg', sql.NVarChar, Rg)
+        .input('Cpf', sql.NVarChar, Cpf)
+        .input('Email', sql.NVarChar, Email)
+        .input('Telefone', sql.NVarChar, Telefone)
+        .input('Endereco', sql.NVarChar, Endereco)
+        .input('Idade', sql.Int, Idade)
+        .query('INSERT INTO tbl_Artesao (Nome, Cidade, Rg, Cpf, Email, Telefone, Endereco, Idade) VALUES (@Nome, @Cidade, @Rg, @Cpf, @Email, @Telefone, @Endereco, @Idade)');
+
+          res.status(201).send('Artesão inserido com sucesso!');
+    }catch(err){
+        console.error('Erro ao inserir artesão:', err);
+        res.status(500).send('Erro ao inserir artesão');
+    }
+
+    /*const novoArtesao = {id: artesao.length + 1, Nome, Cidade, Rg, Cpf, Email, Telefone, Endereco, Idade};
     artesao.push(novoArtesao);
-    res.status(201).send(novoArtesao);
+    res.status(201).send(novoArtesao);*/
 });
 //Exibir todos os artesaos
 app.get('/artesao',(req,res) =>{
@@ -76,14 +146,29 @@ app.delete('/artesao/:id',(req,res) =>{
 
 let produto = [];
 
-app.post('/produto',(req,res) => {
+app.post('/produto', async (req,res) => {
     const {Nome,Descricao,Preco}= req.body;
     if(!Nome||!Descricao||!Preco){
         return res.status(400).send('Nome,Descricao ou Preço ausentes');
     }
-    const novoProduto ={id: produto.length+1,Nome,Descricao,Preco}
+    try{
+        //Usa a conexão existente com o banco
+        const pool = await sql.connect();
+        await pool.request()
+        //.input('Id', sql.NVarChar, )
+        .input('Nome', sql.NVarChar, Nome)
+        .input('Descricao', sql.NVarChar, Descricao)
+        .input('Preco', sql.Money, Preco)
+        .query('INSERT INTO tbl_Produto (Nome,Descricao,Preco) VALUES (@Nome, @Descricao, @Preco)');
+
+          res.status(201).send('Produto inserido com sucesso!');
+    }catch(err){
+        console.error('Erro ao inserir produto:', err);
+        res.status(500).send('Erro ao inserir produto');
+    }
+    /*const novoProduto ={id: produto.length+1,Nome,Descricao,Preco}
     produto.push (novoProduto);
-    res.status(201).send(novoProduto);
+    res.status(201).send(novoProduto);*/
 });
 app.get('/produto',(req,res) =>{
     res.json(produto);
@@ -117,6 +202,65 @@ app.delete('/produto/:id',(req,res) =>{
     
 });
 
-app.listen(port, () =>{
-    console.log(`Servidor rodando na porta http://localhost:${port}`);
+/*app.use(cors());
+
+const config={
+    user:"sa",
+    password:"7Pecado$",
+    server:"DESKTOP-ALOTJN8",
+    database:"Artesanato",
+    options:{
+        trustServerCertificate:true,
+        trustedConnection:false,
+        enableArithbort:true,
+        instancename:"SQLEXPRESS",
+    },
+    port:1433
+}
+// Função para conectar ao banco de dados
+async function conectarBanco() {
+    try {
+        await sql.connect(config);
+        console.log('Conectado ao SQL Server');
+    } catch (err) {
+        console.error('Erro ao conectar ao SQL Server:', err);
+    }
+}
+
+conectarBanco();
+
+app.get('/Produto',async(req,res)=>{
+    try{
+    const pool = await sql.connect(config);
+    const data = pool.request().query('select * from tbl_Produto');
+    data.then(resl=>{
+        return res.json(resl);
+    });
+} 
+catch(err)
+{
+    console.log(err);
+}
 });
+
+app.get('/Artesao',async(req,res)=>{
+    try{
+    const pool = await sql.connect(config);
+    const data = pool.request().query('select * from tbl_Artesao');
+    data.then(resl=>{
+        return res.json(resl);
+    });
+} 
+catch(err)
+{
+    console.log(err);""
+}
+});
+
+app.get('/',(req,res)=>{
+    return res.json("backend on!!!");
+});*/
+
+/*app.listen(port, () =>{
+    console.log(`Servidor rodando na porta http://localhost:${port}`);
+});*/
