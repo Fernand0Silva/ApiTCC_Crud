@@ -1,21 +1,18 @@
-const express = require('express');
+/*const express = require('express');
 const cors = require('cors');
 const { sql, conectarBanco } = require('./Database/BdConfig'); // Importa a conexão
 const app = express();
 const port = 3000;
 
-
 app.use(express.json());
 app.use(cors());
 
 // Inicia a conexão ao banco de dados
-//conectarBanco();
 
 app.get('/',(req,res) => {
     return res.json('Servidor Iniciado :)');
 
 });
-
 
 conectarBanco();
 app.get('/Produto',async(req,res)=>{
@@ -51,14 +48,10 @@ catch(err)
 app.listen(port, () => {
     console.log(`Servidor rodando na porta http://localhost:${port}`);
 });
-/*app.get('/',(req,res)=>{
-    return res.json("backend on!!!");
-});*/
-
-
-let artesao = [];
 
 //Criar artesao
+
+let artesao = [];
 
 app.post('/artesao',async (req,res) => {
     const {Nome,Cidade,Rg,Cpf,Email,Telefone,Endereco,Idade} = req.body;
@@ -87,10 +80,7 @@ app.post('/artesao',async (req,res) => {
         res.status(500).send('Erro ao inserir artesão');
     }
 
-    /*const novoArtesao = {id: artesao.length + 1, Nome, Cidade, Rg, Cpf, Email, Telefone, Endereco, Idade};
-    artesao.push(novoArtesao);
-    res.status(201).send(novoArtesao);*/
-});
+/*});
 //Exibir todos os artesaos
 app.get('/artesao',(req,res) =>{
     res.json(artesao);
@@ -125,15 +115,15 @@ app.put('/artesao/:id',(req,res) =>{
 /* {
     "Nome":"José",
     "Cidade":"SP",
-    "Rg":19809877,
-    "Cpf":1980999,
+    "Rg":"19809877",
+    "Cpf":"1980999",
     "Email":"joseArtesanato@gmail.com ",
-    "Telefone":11984417588,
+    "Telefone":"11984417588",
     "Endereco":"Rua cel dilermano Brisola ",
     "Idade":20
 }*/
 //Deletar Artesão
-app.delete('/artesao/:id',(req,res) =>{
+/*app.delete('/artesao/:id',(req,res) =>{
     const artesaoIndex = artesao.findIndex(p => p.id === parseInt(req.params.id));
     if(artesaoIndex === -1){
         return res.status(404).send('Artesão não encontrado');
@@ -169,7 +159,7 @@ app.post('/produto', async (req,res) => {
     /*const novoProduto ={id: produto.length+1,Nome,Descricao,Preco}
     produto.push (novoProduto);
     res.status(201).send(novoProduto);*/
-});
+/*});
 app.get('/produto',(req,res) =>{
     res.json(produto);
 });
@@ -200,67 +190,4 @@ app.delete('/produto/:id',(req,res) =>{
     produto.splice(deletarProduto,1);
     res.status(202).send('Produto deletado com sucesso :)');
     
-});
-
-/*app.use(cors());
-
-const config={
-    user:"sa",
-    password:"7Pecado$",
-    server:"DESKTOP-ALOTJN8",
-    database:"Artesanato",
-    options:{
-        trustServerCertificate:true,
-        trustedConnection:false,
-        enableArithbort:true,
-        instancename:"SQLEXPRESS",
-    },
-    port:1433
-}
-// Função para conectar ao banco de dados
-async function conectarBanco() {
-    try {
-        await sql.connect(config);
-        console.log('Conectado ao SQL Server');
-    } catch (err) {
-        console.error('Erro ao conectar ao SQL Server:', err);
-    }
-}
-
-conectarBanco();
-
-app.get('/Produto',async(req,res)=>{
-    try{
-    const pool = await sql.connect(config);
-    const data = pool.request().query('select * from tbl_Produto');
-    data.then(resl=>{
-        return res.json(resl);
-    });
-} 
-catch(err)
-{
-    console.log(err);
-}
-});
-
-app.get('/Artesao',async(req,res)=>{
-    try{
-    const pool = await sql.connect(config);
-    const data = pool.request().query('select * from tbl_Artesao');
-    data.then(resl=>{
-        return res.json(resl);
-    });
-} 
-catch(err)
-{
-    console.log(err);""
-}
-});
-
-app.get('/',(req,res)=>{
-    return res.json("backend on!!!");
-});*/
-
-/*app.listen(port, () =>{
-    console.log(`Servidor rodando na porta http://localhost:${port}`);
 });*/
