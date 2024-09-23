@@ -18,6 +18,8 @@ conectarBanco();
 app.use('/Produto', produtoRoutes);
 app.use('/Artesao', artesaoRoutes);
 
+
+
 app.get('/', (req, res) => {
     return res.json('Servidor Iniciado :)');
 });

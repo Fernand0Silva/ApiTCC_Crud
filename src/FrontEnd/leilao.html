@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../FrontEnd/estilo.css">
+    <title>Leilao</title>
+    <style>
+        *{
+            box-sizing: 0;
+        }
+        body{
+            margin: 0;
+            padding: 0;
+        }
+        .container{
+            display: flex;
+            justify-content: space-between;
+            flex-flow: column nowrap;
+            width: 30%;
+            height: 30%;
+            margin-left: 10%;
+        }
+    </style>
+</head>
+<body>
+   
+    <div class="container">
+        <h1>Leilão do Produto</h1>
+        <div class="produto">
+          <img src="img/menu.png" alt="">
+        </div>
+        <p id="valorMinimo">Preço Inicial: R$ 40,00</p>
+
+        <input id="oferta" type="number" value="" placeholder="digite sua oferta"><br>
+
+        <input id="cliente" type="text" value=""placeholder="digite o seu nome" ><br>
+
+        <button onclick="ofertar()">Ofertar</button>
+
+        <p id="ultimaOferta">Última oferta: </p>
+        <p id="ultimoCliente">Último Cliente: </p>
+        <button onclick="limpa()">Limpar</button>
+    </div>
+    
+    <script>
+        function precoInicial(){
+            let precoTexto = document.getElementById('valorMinimo').innerText;
+            let valorInicial = parseFloat(precoTexto.replace('Preço Inicial: R$ ', '').replace(',','.').trim());
+            return valorInicial;
+        }
+        function ofertar(){
+            const valorInicial = parseFloat( document.getElementById('oferta').value);
+            const ClienteInicial = document.getElementById('cliente').value;
+            const minimo = precoInicial();
+            if(valorInicial < minimo){
+                alert("A oferta deve ser maior ou igual a R$ " + minimo.toFixed(2));
+            }else{
+                document.getElementById('ultimaOferta').innerText="Última oferta: R$ " + valorInicial.toFixed(2);;
+            document.getElementById('ultimoCliente').innerText="Última Cliente: " + ClienteInicial;
+            }
+        }
+        function limpa(){
+            const valorInicial = document.getElementById('oferta').value = " ";
+            const ClienteInicial = document.getElementById('cliente').value = " ";
+
+
+            document.getElementById('ultimaOferta').innerText="Última oferta: R$ " ;
+            document.getElementById('ultimoCliente').innerText="Última Cliente: " ;
+
+        }
+    </script>
+</body>
+</html>

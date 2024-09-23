@@ -6,13 +6,32 @@
     <title>Login</title>
 </head>
 <body>
-    <h1>Inicio</h1>
+    <h1>Login</h1>
 
-    <form action="" method="post">
-        Usuario: <input type="text" name="usuario">
-        Senha: <input type="password" name="senha">
-        <input type="">
+    <form>
+        <input type="text" name="usuario" placeholder="usuario" id="login">
+        <input type="password" name="senha" placeholder="senha" id="senha">
+        <p><a href="/TelaCadastro.html" class="link">Ainda não tem conta</a></p>
+        <input type="submit" onclick="logar(); return false">
+        
     </form>
+
+    <script>
+        function logar()
+        {
+            let login = document.getElementById('login').value;
+            let senha = document.getElementById('senha').value;
+
+            if(login == "admin" && senha == "1234567"){
+                alert('sucesso');
+                location.href ='leilao.html';
+            }else{
+                alert('usuario ou senha incorretos');
+            }
+            
+
+        }
+    </script>
     
 </body>
 </html>
